@@ -20,7 +20,7 @@ Mac ──TCP:PORT──▶ [container] socat ──▶ 127.0.0.1:PORT ──SSM
 
 | Variable | Description | Example |
 | --- | --- | --- |
-| `PROFILE` | AWS profile name | `ai-dev` |
+| `PROFILE` | AWS profile name | `my-profile` |
 | `REGION` | AWS region | `us-east-1` |
 | `INSTANCE` | Target EC2 instance ID | `i-0123456789abcdef0` |
 | `PORT` | Port to forward (same on remote and local) | `8080` |
@@ -38,7 +38,7 @@ container build --no-cache -t ssm-proxy .
 Log in on the host first:
 
 ```sh
-aws sso login --profile ai-dev
+aws sso login --profile my-profile
 ```
 
 ```sh
@@ -46,7 +46,7 @@ container run --rm --name ssm-proxy \
   -v ~/.aws:/root/.aws-mounted:ro \
   -v ~/.aws/sso:/root/.aws/sso \
   -e AWS_CONFIG_FILE=/root/.aws-mounted/config \
-  -e PROFILE=ai-dev \
+  -e PROFILE=my-profile \
   -e REGION=us-east-1 \
   -e INSTANCE=i-0123456789abcdef0 \
   -e PORT=8080 \
@@ -61,7 +61,7 @@ container run --rm --name ssm-proxy \
 ```sh
 container run --rm --name ssm-proxy \
   -v ~/.aws:/root/.aws:ro \
-  -e PROFILE=ai-dev \
+  -e PROFILE=my-profile \
   -e REGION=us-east-1 \
   -e INSTANCE=i-0123456789abcdef0 \
   -e PORT=8080 \
