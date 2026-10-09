@@ -9,11 +9,12 @@ If the session drops, it reconnects automatically after 5 seconds.
 ## How it works
 
 ```
-Mac ──TCP:PORT──▶ [container] socat ──▶ 127.0.0.1:PORT ──SSM──▶ EC2 (INSTANCE):PORT
+Mac ──TCP:PORT──▶ [container] socat ──▶ 127.0.0.1:LOCAL_PORT ──SSM──▶ EC2 (INSTANCE):PORT
 ```
 
-- `aws ssm start-session` (`AWS-StartPortForwardingSession`) listens on `127.0.0.1:PORT` inside the container.
-- `socat` accepts connections from outside the container and relays them to that port.
+- `aws ssm start-session` (`AWS-StartPortForwardingSession`) listens on `127.0.0.1:LOCAL_PORT` inside the container.
+  `LOCAL_PORT` is `PORT + 10000` (or `PORT - 10000` if `PORT` is above 55535), so it never overlaps with socat's listening port.
+- `socat` accepts connections on `PORT` and relays them to `LOCAL_PORT`.
 - Every 5 minutes, a connection is made to the local port to prevent the session from being closed due to idleness.
 
 ## Environment variables
